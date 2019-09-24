@@ -1,4 +1,4 @@
-In this project, I will compare and contrast two groups: those who receive assistance for a period of time and then leave the system without returning later, and those who leave the system without returning.
+In this project, I will compare and contrast two groups: those who receive assistance for a period of time and then leave the system without returning later, and those who leave the system to return later.
 
 I hope by this analysis to be able to see what factors may be associated with individuals improving their situations and no longer needing assistance, and which factors may be associated with only temporary reprieve from homelessness.
 
