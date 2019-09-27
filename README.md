@@ -19,5 +19,5 @@ Keeping this in mind, I will base my analysis on comparisons between clients, an
 <h1>Analysis Methods</h1>
 
 <body>
-For this project I will be relying on R, specifically packages including tidyvers, ggplot and a few others. I will attempt to wrangle the data into forms that can be used to create intuitive visualizations to help us learn more about what exactly the data has to tell us.
+For this project I will be relying on R, specifically packages including tidyverse, ggplot and a few others. I will attempt to wrangle the data into forms that can be used to create straightforward visualizations to help us learn more about what exactly the data has to tell us.
 </body>
