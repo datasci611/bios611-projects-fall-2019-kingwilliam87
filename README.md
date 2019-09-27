@@ -1,7 +1,17 @@
-In this project, I will compare and contrast two groups: those who receive assistance for a period of time and then leave the system without returning later, and those who leave the system to return later.
+###Description of Data
 
-I hope by this analysis to be able to see what factors may be associated with individuals improving their situations and no longer needing assistance, and which factors may be associated with only temporary reprieve from homelessness.
+The data used for this project was provided by Urban Ministries, a charity organization that has worked to help those in need in our community for decades.  
 
-My aim is to provide useful evidence to support which types of assistance may be most useful, so that this can be taken into account when prioritizing resources.
+The data they provided was collected over multiple decades and is stored as a tsv file. It includes numerical and categorical data about their clients and the different types of assistance they received at different times.
 
-As this is my first project of this sort, I expect at best to only be able to demonstrate association between different interventions and these two outcomes. Causality would be difficult to find convincing evidence for, although we will see what happens!
+###Project 1 Overview
+
+In this project, I will do my best to look at the data from the point of view of the people it will be most useful for: the social workers at Urban Ministries themselves. What knowledge can we glean from this data that would be most helpful for them and allow them to find ways to better help their clients?
+
+In our first and only meeting with Urban Ministries, they mentioned one area where they are curious in learning more: which clients are they able to help make a permanent transition to self-sufficiency, and which clients continue to need help? They said they hoped to learn more about which methods were most useful and which ones were less useful.
+
+Keeping this in mind, I will base my analysis on comparisons between clients, and specifically between clients who receive help from different durations of time. My hope is to recognize some patterns and differences between these different types of clients - perhaps see if there are any clear signs that certain types of assistance are more successful than others. In the end, my goal is to uncover information that could be useful for Urban Ministries to plan their future aid-giving.
+
+###Analysis Methods
+
+For this project I will be relying on R, specifically packages including tidyvers, ggplot and a few others. I will attempt to wrangle the data into forms that can be used to create intuitive visualizations to help us learn more about what exactly the data has to tell us.
