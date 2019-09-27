@@ -1,0 +1,473 @@
+---
+title: "project 1 rough draft"
+author: "Will"
+date: "9/26/2019"
+output: html_document
+---
+```{r include=FALSE}
+library(tidyverse)
+library(magrittr)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+
+UMDsvc<-read_tsv("UMD_Services_Provided_20190719.tsv")
+
+#found typo in client's file
+#most 'food pounds' entries were 45, but one was 45121
+UMDsvc$`Food Pounds`[68024]<-45
+
+#convert "Date" column from characters to dates
+UMDsvc<-UMDsvc %>%
+  mutate(Date=as.Date(Date,"%m/%d/%Y"))
+
+#clear out typos
+
+UMDsvc %>%
+filter(`Client File Number`==15000) %>%
+  select(Date,`Food Pounds`) %>%
+  view()
+#it appears to be another typo: 5303 instead of 53
+UMDsvc<-UMDsvc %>%
+  arrange(-`Food Pounds`)
+UMDsvc$`Food Pounds`[1]<-53
+
+UMDsvc %>%
+filter(`Client File Number`==14580) %>%
+select(`Date`,`Food Pounds`)
+
+#It appears '3738' was meant to be 37 or 38. 
+#We replace with average, 37.5
+UMDsvc$`Food Pounds`[2]<-37.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==12719) %>%
+  select(`Date`,`Food Pounds`)
+
+#again, we see a similar problem.
+#We replace '1934' with the average, (19+34)/2= 26.5
+
+UMDsvc$`Food Pounds`[3]<-26.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==13749) %>%
+  select(`Date`,`Food Pounds`)
+
+#again, we see a similar problem.
+#We replace '1934' with the average, (19+34)/2= 26.5
+UMDsvc$`Food Pounds`[4]<-26.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==16043) %>%
+  select(`Date`,`Food Pounds`)
+
+UMDsvc %>%
+  filter(`Client File Number`==16393) %>%
+  select(`Date`,`Food Pounds`)
+#these observations are different.
+#the Client File Numbers 16043 and 16393
+#only have 1 entry for `Food Pounds`
+UMDsvc %>%
+  filter(`Client File Number`==1370) %>%
+  select(`Date`,`Food Provided for`,`Food Pounds`)
+#this observation also only has one non-NA entry for `Food Pounds`
+
+UMDsvc %>%
+  filter(`Client File Number`==10576) %>%
+  select(`Date`,`Food Pounds`)
+#this is more similar to the previous ones
+#It seems reasonable to replace 1831 with the average again
+#(18+31)/2=24.5
+UMDsvc$`Food Pounds`[8]<-24.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==14151) %>%
+  select(`Date`,`Food Pounds`)
+#this is more similar to the previous ones
+#It seems reasonable to replace 1831 with the average again
+#(18+31)/2=24.5
+UMDsvc$`Food Pounds`[9]<-24.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==14318) %>%
+  select(`Date`,`Food Pounds`)
+#This only has two entries but still likely a typo.
+#Will replace 1831 with average of 24.5
+UMDsvc$`Food Pounds`[10]<-24.5
+view(UMDsvc)
+#Client File Number 1180 has a large value for Food Pounds=1700
+#And also large number for Food Provided for=200
+UMDsvc %>%
+  filter(`Client File Number`==1180) %>%
+  select(`Date`,`Food Provided for`,`Food Pounds`)
+
+UMDsvc %>%
+  filter(`Client File Merge`==21180) %>%
+  select(`Date`,`Food Provided for`,`Food Pounds`) %>%
+  view()
+#Will come back to this one.
+
+#After looking at Food Provided for, can justify
+#adjusting three previous examples, as they are likely typos
+
+UMDsvc %>%
+  filter(`Client File Number`==16043) %>%
+  select(`Date`,`Food Pounds`)
+
+UMDsvc$`Food Pounds`[5]<-26.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==16393) %>%
+  select(`Date`,`Food Pounds`)
+
+UMDsvc$`Food Pounds`[6]<-26.5
+view(UMDsvc)
+
+UMDsvc %>%
+  filter(`Client File Number`==1370) %>%
+  select(`Date`,`Food Provided for`,`Food Pounds`)
+
+UMDsvc$`Food Pounds`[7]<-24.5
+view(UMDsvc)
+
+#Dates appear to be continuous going back until 1991.
+#Then they begin to "jump" by 10 year intervals, all the way to 1931!
+#Let's limit our analysis to the past 20 years.
+#They will likely be more relevant anyways.
+
+UMD.20yr<-UMDsvc %>%
+  filter(Date>"2000-01-01" & Date<"2019-09-25")
+
+#We can also split our data into different time periods for comparison
+
+UMD.15yr<-UMD.20yr %>%
+  filter(Date>"2005-01-01") %>%
+  view()
+
+UMD.10yr<-UMD.15yr %>%
+  filter(Date>"2010-01-01") %>%
+  view()
+
+UMD.5yr<-UMD.10yr %>%
+  filter(Date>"2015-01-01") %>%
+  view()
+
+UMD.16.20yr<-anti_join(UMD.20yr,UMD.15yr)
+
+UMD.11.15yr<-anti_join(UMD.15yr,UMD.10yr)
+
+UMD.6.10yr<-anti_join(UMD.10yr,UMD.5yr)
+
+
+#Let's split our data into 2 groups:
+#1). Clients who received assistance only 1 time
+#2). Clients who received assistance multiple times
+client.20yr.sing<-UMD.20yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.20yr.sing<-semi_join(UMD.20yr,client.20yr.sing)
+UMD.20yr.mult<-anti_join(UMD.20yr,client.20yr.sing)
+
+client.16.20yr.sing<-UMD.16.20yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.16.20yr.sing<-semi_join(UMD.16.20yr,client.16.20yr.sing)
+UMD.16.20yr.mult<-anti_join(UMD.16.20yr,client.16.20yr.sing)
+
+client.15yr.sing<-UMD.15yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.15yr.sing<-semi_join(UMD.15yr,client.15yr.sing)
+UMD.15yr.mult<-anti_join(UMD.10yr,client.15yr.sing)
+
+client.11.15yr.sing<-UMD.11.15yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.11.15yr.sing<-semi_join(UMD.11.15yr,client.11.15yr.sing)
+UMD.11.15yr.mult<-anti_join(UMD.11.15yr,client.11.15yr.sing)
+
+client.10yr.sing<-UMD.10yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.10yr.sing<-semi_join(UMD.10yr,client.10yr.sing)
+UMD.10yr.mult<-anti_join(UMD.10yr,client.10yr.sing)
+
+client.6.10yr.sing<-UMD.6.10yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.6.10yr.sing<-semi_join(UMD.6.10yr,client.6.10yr.sing)
+UMD.6.10yr.mult<-anti_join(UMD.6.10yr,client.6.10yr.sing)
+
+client.5yr.sing<-UMD.5yr %>%
+  group_by(`Client File Number`) %>%
+  summarize(First=min(Date),Last=max(Date)) %>%
+  filter(First==Last)
+
+UMD.5yr.sing<-semi_join(UMD.5yr,client.5yr.sing)
+UMD.5yr.mult<-anti_join(UMD.5yr,client.5yr.sing)
+
+UMD.20yr.mult.dur<-UMD.20yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+UMD.20yr.mult.dur %>%
+  arrange(Freq) %>%
+  view()
+
+UMD.16.20yr.mult.dur<-UMD.16.20yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+UMD.16.20yr.mult.dur
+
+UMD.15yr.mult.dur<-UMD.15yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+
+
+UMD.11.15yr.mult.dur<-UMD.11.15yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+UMD.10yr.mult.dur<-UMD.10yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+UMD.6.10yr.mult.dur<-UMD.6.10yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+UMD.5yr.mult.dur<-UMD.5yr.mult %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Times=n(),
+            Freq=format(Duration/Times,digits=3))
+
+
+UMD.20yr.dur<-UMD.20yr %>%
+  group_by(`Client File Number`)%>%
+  summarize(Duration=max(Date)-min(Date),Visits=n(),
+            Freq=format(Duration/Visits,digits=3),
+            `Food Pounds Per Visit`=sum(`Food Pounds`,na.rm=TRUE)/Visits,
+            `Food Provided for Per Visit`=sum(`Food Provided for`,na.rm=TRUE)/Visits,
+            `Financial Support Per Visit`=sum(`Financial Support`,na.rm=TRUE),
+            `Clothing Items Per Visit`=sum(`Clothing Items`,na.rm=TRUE)/Visits)
+
+UMD.20yr<-left_join(UMD.20yr,UMD.20yr.dur) %>%
+  view()
+view(UMD.20yr)
+
+#Let's split the Duration into several categories
+#The histogram suggested the duration of assistance 
+#Could be split into a few relatively similar groups
+
+x<-tibble(UMD.20yr$Duration)
+
+g<-"initialize"
+for(i in 1:nrow(x)){
+  if(x[i,1]==0){
+    g[i]<-paste0("1 Day")
+  } else if(x[i,1]>0 & x[i,1]<=31){
+    g[i]<-paste0("2-31 Days")
+  } else if(x[i,1]>31 & x[i,1]<=183){
+    g[i]<-paste0("1-6 Months")
+  } else if(x[i,1]>183 & x[i,1]<=365){
+    g[i]<-paste0("6-12 Months")
+  }else if(x[i,1]>365 & x[i,1]<=730){
+    g[i]<-paste0("1-2 Years")
+  }else if(x[i,1]>730 & x[i,1]<=1825){
+    g[i]<-paste0("2-5 Years")
+  }else if(x[i,1]>1825){
+    g[i]<-paste0("5+ Years")
+  }
+  else{
+    NULL
+  }
+}
+
+UMD.20yr<-UMD.20yr %>%
+  mutate(`Time Assisted for`=g)
+  view(UMD.20yr)
+
+UMD.15yr<-UMD.20yr %>%
+  filter(Date>"2005-01-01") 
+
+UMD.10yr<-UMD.15yr %>%
+  filter(Date>"2010-01-01") 
+  
+UMD.5yr<-UMD.10yr %>%
+  filter(Date>"2015-01-01")
+  
+UMD.16.20yr<-anti_join(UMD.20yr,UMD.15yr)
+
+UMD.11.15yr<-anti_join(UMD.15yr,UMD.10yr)
+
+UMD.6.10yr<-anti_join(UMD.10yr,UMD.5yr)
+
+```
+Urban Ministries has been helping those in need in our local community for over 30 years.  
+They have been keeping track of some of their clients' date throughout that time, and hopefully we can work together to gather some helpful information from this data.  
+
+One area in particular that I believe could be helpful is to look more at client-centered data, and to see if there are any noticeable patterns.  
+
+After tidying the data and clearing up typos, I first look into how long different clients received assistance for.
+
+```{r echo=FALSE}
+ggplot(data=UMD.16.20yr.mult.dur)+
+  geom_histogram(mapping=aes(x=Duration), binwidth=30,
+                 color="light blue",fill="blue") +
+  labs(title="Duration of Assistance for Clients 16-20 Yrs Ago",
+       x="Days Assisted (1 bar = 1 month)",y="Number of Clients") +
+  theme_dark()
+
+ggplot(data=UMD.11.15yr.mult.dur)+
+  geom_histogram(mapping=aes(x=Duration), binwidth=30,
+                 color="light blue",fill="blue") +
+  labs(title="Duration of Assistance for Clients 11-15 Yrs Ago",
+       x="Days Assisted (1 bar = 1 month)",y="Number of Clients") +
+  theme_dark()
+
+ggplot(data=UMD.6.10yr.mult.dur)+
+  geom_histogram(mapping=aes(x=Duration), binwidth=30,
+                 color="light blue",fill="blue") +
+  labs(title="Duration of Assistance for Clients 6-10 Yrs Ago",
+       x="Days Assisted (1 bar = 1 month)",y="Number of Clients") +
+  theme_dark()
+
+ggplot(data=UMD.5yr.mult.dur)+
+  geom_histogram(mapping=aes(x=Duration), binwidth=30,
+                 color="light blue",fill="blue") +
+  labs(title="Duration of Assistance for Clients Last 5 Yrs",
+       x="Days Assisted (1 bar = 1 month)",y="Number of Clients") +
+  theme_dark()
+```
+In these histograms, each bar represents 30 days, which should be an intuitive period of time for our needs.  
+
+Some things I notice most obviously are:
+-The spike at the second month means a large proportion of people receive assistance for only about 2 months.
+-The first month initially is relatively high but has been decreasing over the years, so there may be fewer people who receive only short-term help during the past five years. Are there now more people receiving long-term help than before?
+-Frequencies taper off quite quickly after the first few months
+-It could be possible to divide the durations into discrete categories.
+
+Splitting the durations of assistance up into several categories, we can see a more specific breakdown of how long clients have been receiving help from Urban Ministries:
+
+```{r echo=FALSE}
+
+dur.group.order<-c("1 Day","2-31 Days","1-6 Months","6-12 Months","1-2 Years","2-5 Years","5+ Years")
+
+ggplot(data=UMD.16.20yr,aes(x=`Time Assisted for`))+
+  scale_x_discrete(limit=dur.group.order)+
+  geom_bar(aes(fill=`Time Assisted for`))+
+  labs(x="Times",y="Clients",title= "Clients' Duration of Assistance, 16-20 Years Ago")+
+  coord_flip() +theme(legend.position="none")
+
+ggplot(data=UMD.11.15yr,aes(x=`Time Assisted for`))+
+  scale_x_discrete(limit=dur.group.order)+
+  geom_bar(aes(fill=`Time Assisted for`))+
+  labs(x="Times",y="Clients",title= "Clients' Duration of Assistance, 11-15 Years Ago")+
+  coord_flip()+theme(legend.position="none")
+
+ggplot(data=UMD.6.10yr,aes(x=`Time Assisted for`))+
+  scale_x_discrete(limit=dur.group.order)+
+  geom_bar(aes(fill=`Time Assisted for`))+
+  labs(x="Times",y="Clients",title= "Clients' Duration of Assistance, 6-10 Years Ago")+
+  coord_flip()+theme(legend.position="none")
+
+ggplot(data=UMD.5yr,aes(x=`Time Assisted for`))+
+  scale_x_discrete(limit=dur.group.order)+
+  geom_bar(aes(fill=`Time Assisted for`))+
+  labs(x="Times",y="Clients",title= "Duration of Assistance for Clients, Past 5 Years")+
+  coord_flip()+theme(legend.position="none")
+
+```
+
+One clear trend is a decrease over the years in clients who received assistance for one day.  
+
+By far the largest proportion of clients have received help for 5+ years. Of course, that is also by far the longest time period.  
+
+In the past 5 years, the number of people who have received help for 2-5 years and for 5+ years have both increased.
+
+By comparing these duration groups with regard to other data, we can hope to find any possible patterns.
+
+First, let us look at Food Pounds Per Visit for clients with different durations of assistance.
+
+```{r}
+ggplot(data=filter(UMD.20yr,`Food Pounds Per Visit`<75),
+       aes(x=`Time Assisted for`,y=`Food Pounds Per Visit`))+
+  geom_boxplot()+
+  scale_x_discrete(limit=dur.group.order)
+
+ggplot(data=filter(UMD.10yr,`Food Pounds Per Visit`<75 & `Food Pounds Per Visit` >0),
+       aes(x=`Time Assisted for`,y=`Food Pounds Per Visit`))+
+  geom_boxplot()+
+  scale_x_discrete(limit=dur.group.order)
+
+ggplot(data=filter(UMD.5yr,`Food Pounds Per Visit`<75 & `Food Pounds Per Visit`>0),aes(x=`Time Assisted for`,
+              y=`Food Pounds Per Visit`))+geom_boxplot()+scale_x_discrete(limit=dur.group.order)
+```
+
+One thing I notice is that the 1-day clients appear to receive slightly more food per visit than others.  
+
+This could possibly suggest that clients who receive enough food on their first visit are less likely to need to return again. Alternatively, it could instead only be due to scarcity of resources that makes it difficult to give large amounts of food to clients over long periods of time. More analysis would be required to try to help answer this question.
+
+Next, we look at similar boxplots with regard to clothing received per visit.
+
+```{r}
+ggplot(data=UMD.20yr,aes(x=`Time Assisted for`,
+    y=`Clothing Items Per Visit`))+geom_boxplot()+
+  scale_x_discrete(limit=dur.group.order) 
+
+ggplot(data=UMD.10yr,aes(x=`Time Assisted for`,
+    y=`Clothing Items Per Visit`))+geom_boxplot()+
+  scale_x_discrete(limit=dur.group.order) 
+
+ggplot(data=UMD.5yr,aes(x=`Time Assisted for`,
+        y=`Clothing Items Per Visit`))+geom_boxplot()+scale_x_discrete(limit=dur.group.order) 
+```
+
+In this category, nothing in particular stands out.
+
+Finally, we can look at direct financial support per visit.
+
+```{r}
+ggplot(data=filter(UMD.20yr,`Financial Support Per Visit`!=0),aes(x=`Time Assisted for`,
+ y=`Financial Support Per Visit`))+geom_boxplot()+scale_x_discrete(limit=dur.group.order)
+
+ggplot(data=filter(UMD.15yr,`Financial Support Per Visit`!=0),aes(x=`Time Assisted for`,
+ y=`Financial Support Per Visit`))+geom_boxplot()+scale_x_discrete(limit=dur.group.order)
+
+ggplot(data=filter(UMD.10yr,`Financial Support Per Visit`!=0),aes(x=`Time Assisted for`,
+  y=`Financial Support Per Visit`))+geom_boxplot()+scale_x_discrete(limit=dur.group.order)
+
+ggplot(data=filter(UMD.5yr,`Financial Support Per Visit`!=0),aes(x=`Time Assisted for`,
+  y=`Financial Support Per Visit`))+geom_boxplot()+scale_x_discrete(limit=dur.group.order)
+```
+
+Here, there are also not many noticeable patterns, other than the fact that direct financial support appears to have dried up over the past ten years.
+
+At this point, I feel it would be helpful to speak directly with our clients at Urban Ministries to see how they feel about the information we have reviewed so far. Further analysis is definitely required to be able to draw many worthwhile conclusions, and it would be helpful to hear from them what directions they would like to go in.
+
