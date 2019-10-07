@@ -262,12 +262,13 @@ ggplot(filter(UMD.20yr,Duration==0))+
   
 Some observations:
 
-* There are not extreme differences between months.  
+* There are not extreme differences between months. 
+
 * Summer consistently has a relatively high number of visits.  
 
 * Spring consistently has a relatively low number of visits.  
 
-*The overall increasing trend is more noticeable than any month-to-month differences.
+* The overall increasing trend is more noticeable than any month-to-month differences.
 
 
 From our first graphs on assistance duration for clients, it appeared that the durations could be divided into several strata:
@@ -371,6 +372,8 @@ ggplot(data=filter(UMD.20yr,`Food Pounds Per Visit` <75 & `Food Pounds Per Visit
 One thing I notice is that the 1-day clients appear to receive slightly more food per visit than others.  
 
 This could possibly suggest that clients who receive enough food on their first visit are less likely to need to return again. Alternatively, it could instead only be due to scarcity of resources that makes it difficult to give large amounts of food to clients over long periods of time. More analysis would be required to try to help answer this question.  
+
+So far, we have recognized some patterns in the duration of assistance for clients. These are good starting points from which to continue further analysis in a number of potential directions.
 
 At this point, I feel it would be helpful to speak directly with our clients at Urban Ministries to see how they feel about the information we have reviewed so far. Further analysis is definitely required to be able to draw many worthwhile conclusions, and it would be helpful to hear from them what directions they would like to go in.
 
