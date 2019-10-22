@@ -34,4 +34,10 @@ For this project I will be relying on R, specifically packages including tidyver
 
 <body>
 I plan to make interactivity very simple and intuitive, so that people with very little statistical knowledge and background can use with ease.
+
+My attempt to allow the user to "capture" an area on the first plot to populate the data for a new plot so far has eluded me. I would welcome any advice on how to do so!
+
+I realized I forgot to include the URL:
+
+https://kingwilliam87.shinyapps.io/project_2/
 </body>

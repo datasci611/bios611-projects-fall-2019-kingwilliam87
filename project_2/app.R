@@ -1,6 +1,7 @@
 #app!
 source("helper_functions.R",local=environment())
-
+library(rsconnect)
+deployApp()
 
 ui <- fluidPage(
   titlePanel("Services Provided, 2000-2019"),
