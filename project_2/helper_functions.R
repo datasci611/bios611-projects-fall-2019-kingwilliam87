@@ -23,11 +23,13 @@ umd$`Food Pounds`[68024]<-45
 
 #clear out typos
 
-#it appears to be another typo: 5303 instead of 53
+#Some typos are obvious: 5303 in one cell when all others are 53.
 umd<-umd %>%
   arrange(-`Food Pounds`)
 umd$`Food Pounds`[1]<-53
 
+#Other typos appear to be two values entered into one cell: 3738
+#Fix by entering in the average of the two.
 umd$`Food Pounds`[2]<-37.5
 
 umd$`Food Pounds`[3]<-26.5
@@ -46,9 +48,12 @@ umd$`Food Pounds`[9]<-24.5
 
 umd$`Food Pounds`[10]<-24.5
 
+#One client number has only improbable values for all variables
+#Fix by removing that client file.
 umd<-umd %>%
   filter(`Client File Number`!=1180)
 
+#Similar straightforward typo in diapers of 5303 instead of 53.
 umd<-umd %>%
   arrange(-`Diapers`)
 umd$`Diapers`[1]<-53
@@ -65,8 +70,8 @@ umd.2000to2019.dur<-umd.2000to2019 %>%
   group_by(`Client File Number`)%>%
   summarize(Duration=max(Date)-min(Date),Visits=n(),
             Frequency=as.numeric(Duration/Visits),
-            `Food Pounds Per Visit`=sum(`Food Pounds`,na.rm=TRUE)/Visits,
-            `Food Provided for Per Visit`=sum(`Food Provided for`,na.rm=TRUE)/Visits)
+            Foodpoundspervisit=sum(`Food Pounds`,na.rm=TRUE)/Visits,
+            Foodprovidedpervisit=sum(`Food Provided for`,na.rm=TRUE)/Visits)
 
 #re-join to original dataset
 umd.2000to2019<-left_join(umd.2000to2019,umd.2000to2019.dur)
@@ -92,7 +97,8 @@ for(i in 1:nrow(x)){
     NULL
   }
 }
-
+umd.2000to2019<-umd.2000to2019 %>%
+  mutate(Timeassisted=g)
 
 #create datasets for different time periods
 umd.2005to2019<-umd.2000to2019 %>%
@@ -134,27 +140,111 @@ umd.2000to2019 <- umd.2000to2019 %>%
   select(-`Client File Merge`,-`Field1`,-`Field2`,-`Field3`,
   )
 
-umd.2000to2019 <- umd.2000to2019 %>%
-  rename(Food_Pounds=`Food Pounds`,
-         Clothing_Items=`Clothing Items`,
-         Hygiene_Kits=`Hygiene Kits`,
-School_Kits=`School Kits`)
+umd.final <- umd.2000to2019 %>%
+  rename(
+          id=`Client File Number`,
+          Food=`Food Pounds`,
+          Clothing=`Clothing Items`,
+          Hygienekits=`Hygiene Kits`,
+          Schoolkits=`School Kits`,
+          Financial=`Financial Support`,
+          Bus=`Bus Tickets (Number of)`)
 
 
-varplot <- function(v) {
-  if(v==1){
-    ggplot(umd.2000to2019, aes_string(x="Date", y="Clothing_Items")) + geom_point()
-  }
-  else if(v==2){
-    ggplot(umd.2000to2019, aes_string(x="Date", y="Diapers")) + geom_point()
-  }
-  else if(v==3){
-    ggplot(umd.2000to2019, aes_string(x="Date", y="Food_Pounds")) + geom_point()
-  }
-  else if(v==4){
-    ggplot(umd.2000to2019, aes_string(x="Date", y="Hygiene_Kits")) + geom_point()
-  }
-  else if(v==5){
-    ggplot(umd.2000to2019, aes_string(x="Date", y="School_Kits")) + geom_point()
-  }
+plot1a <- function(data,service,year) {
+    
+  serviceperyear= data %>%
+      select(Date,service) %>%
+      drop_na() %>%
+      separate(Date, sep = "-", into = c("Year","Month", "Day"))%>%
+      filter(Year>=year[1]&Year<=year[2])%>%
+      group_by(Year) %>%
+      summarise(sum=n())
+    
+    p1=ggplot(serviceperyear, aes(x=as.numeric(Year),y=sum)) + 
+      geom_point()+
+      geom_text(aes(label=sum),vjust=-0.5,size=3)+
+      geom_line(size=1,color="lightskyblue")+
+      scale_x_continuous(breaks=seq(year[1],year[2],2))+
+  labs(x="Year",y= paste('Amount of',service,'Service Provided'),
+       title = paste('Total',service,'Service Provided Annually from',min(year),'to',max(year)))
+      
+    return(p1)
 }
+
+plot1b <-function(data,service,year) {
+  
+  serviceperyear= data %>%
+    select(Date,service) %>%
+    drop_na() %>%
+    separate(Date, sep = "-", into = c("Year","Month", "Day"),remove=FALSE)%>%
+    filter(Year>=year[1]&Year<=year[2])
+  
+  p2=ggplot(serviceperyear, aes_string(x='Date',y=service)) + 
+    geom_point(color="navy")+
+    labs(x="Year",y= paste('Amount of',service,'Service Provided'),
+         title = paste('All Counts of',service,'Service Provided from',min(year),'to',max(year)))
+  
+  return(p2)
+}
+
+
+
+plot2<-function(data,points,service,year) {
+
+  serviceperyear= data %>%
+    select(id,Date,service,'Timeassisted') %>%
+    drop_na() %>%
+    separate(Date, sep = "-", into = c("Year","Month", "Day"),remove=FALSE)%>%
+    filter(Year>=year[1]&Year<=year[2])
+  
+  selectedData <- reactive({
+    dat <- brushedPoints(serviceperyear, points)
+    if (nrow(dat) == 0)
+      dat <- serviceperyear
+    dat})
+  
+  ggplot(selectedData(), aes_string(x='Timeassisted'))+
+    scale_x_discrete(limit=dur.group.order)+
+    scale_fill_discrete(limit=dur.group.order)+
+    geom_bar(aes_string(fill='Timeassisted')) +
+    theme(axis.text.x=element_blank())+
+    labs(x= "Service Duration",y="Number of Clients",
+         title="Clients by Service Duration",
+         fill="Service Duration")
+}
+
+
+tab<-function(data,points,service,year){
+ 
+   serviceperyear= data %>%
+    select(id,Date,service) %>%
+    drop_na() %>%
+    separate(Date, sep = "-", into = c("Year","Month", "Day"),remove=FALSE)%>%
+    filter(Year>=year[1]&Year<=year[2])
+  
+  selectedData2 <- reactive({
+    dat2 <- brushedPoints(serviceperyear, points)
+    if (nrow(dat2) == 0)
+      dat2 <- serviceperyear
+    dat2})
+  
+  table1<-selectedData2() %>%
+    select(id)%>%
+    drop_na()%>%
+    group_by('idnum'=as.integer(id)) %>%
+    summarise(`Service Count`=n())
+  
+  table2<-data %>%
+    mutate('idnum'=as.integer(id))
+  
+  out_table<-left_join(table1,table2,by='idnum')%>%
+    select(`Client ID`='idnum',`Service Count`,`Service Duration`='Timeassisted')%>%
+    subset(!duplicated(`Client ID`))%>%
+    arrange(-`Service Count`)%>%
+    head(n=20)
+  
+  out_table
+}
+
+
