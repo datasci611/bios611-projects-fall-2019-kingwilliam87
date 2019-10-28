@@ -1,5 +1,7 @@
 #app!
-source("helper_functions.R",local=environment())
+rsconnect::deployApp('C:/Users/Lenovo/Documents/GitHub/bios611-projects-fall-2019-kingwilliam87/project_2')
+Y
+source("helper_functions.R",local=TRUE)
 
 
 ui <- fluidPage(
