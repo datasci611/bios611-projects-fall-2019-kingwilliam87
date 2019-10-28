@@ -1,5 +1,5 @@
 #helper functions
-
+library(rsconnect)
 library(tidyverse)
 library(shiny)
 library(shinydashboard)
@@ -10,7 +10,7 @@ library(dplyr)
 library(lubridate)
 
 #Read data from original tsv file
-umd<-read_tsv("data/UMD_Services_Provided_20190719.tsv")
+umd<-read_tsv("UMD_Services_Provided_20190719.tsv")
 
 
 #convert date to standard format
