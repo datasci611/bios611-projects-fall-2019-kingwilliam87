@@ -4,6 +4,12 @@ author: "William King"
 date: "10/15/2019"
 output: html_document
 ---
+<h1> Project URL </h1>
+
+<body>
+https://kingwilliam87.shinyapps.io/project_2/
+</body>
+
 <h1>Description of Data</h1>
 
 <body>
@@ -16,6 +22,8 @@ The data they provided was collected over multiple decades and is stored as a ts
 
 <body>
 In this project, the question I hope to help answer is, what useful information can this data tell us? This may seem like a very vague and open-ended question, but I think it is an important one. Urban Ministries have been collecting this data for decades, and I am sure they want to be able to better understand what information they can take from it.
+  
+This project displays information about services provided, trends over time, and compares the service count and duration among clients.
 </body>
 
 <h1>Audience</h1>
@@ -27,17 +35,15 @@ My audience for this project will be the staff at Urban Ministries. My hope is t
 <h1>Analysis Methods</h1>
 
 <body>
-For this project I will be relying on R, specifically packages including tidyverse, ggplot and a few others. I will attempt to wrangle the data into forms that can be used to create straightforward visualizations to help us learn more about what exactly the data has to tell us.
+For this project I will be relying on R, specifically packages including tidyverse, ggplot, dplyr and a few others. I have attempted to wrangle the data into forms that can be used to create straightforward visualizations to help us learn more about what exactly the data has to tell us.
 </body>
 
 <h1>Interactivity</h1>
 
 <body>
-I plan to make interactivity very simple and intuitive, so that people with very little statistical knowledge and background can use with ease.
+All tables and plots displayed are based on variables chosen by the user. To begin, the user selects a service and a time period. A plot is displayed with the total annual amount of that particular service provided over each year in the time period.
+  
+A second plot displays all instances of that service being provided over the time period. The user can then use the mouse cursor to capture the points they wish to have a closer look at. These points are used to populate a table showing Client ID, Service Count and Service Duration for the clients represented in the captured points. A third plot displays the count of clients in different strata of Service Duration from the captured points.
 
-My attempt to allow the user to "capture" an area on the first plot to populate the data for a new plot so far has eluded me. I would welcome any advice on how to do so!
-
-I realized I forgot to include the URL:
-
-https://kingwilliam87.shinyapps.io/project_2/
+My hope is that users (specifically, our clients at UMD) are able to explore the project on their own to learn more helpful information about their data.
 </body>
