@@ -1,7 +1,15 @@
 #app!
-rsconnect::deployApp('C:/Users/Lenovo/Documents/GitHub/bios611-projects-fall-2019-kingwilliam87/project_2')
-Y
-source("helper_functions.R",local=TRUE)
+
+library(tidyverse)
+library(shiny)
+library(shinydashboard)
+library(magrittr)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+
+source("helper_functions.R",local=environment())
 
 
 ui <- fluidPage(
