@@ -62,16 +62,12 @@ umd$`Diapers`[1]<-53
 umd.2000to2019<-umd %>%
   filter(Date>"2000-01-01" & Date<"2019-10-21")
 
-umd.2000to2019
 
 
 #Create dataset with summary variables
 umd.2000to2019.dur<-umd.2000to2019 %>%
   group_by(`Client File Number`)%>%
-  summarize(Duration=max(Date)-min(Date),Visits=n(),
-            Frequency=as.numeric(Duration/Visits),
-            Foodpoundspervisit=sum(`Food Pounds`,na.rm=TRUE)/Visits,
-            Foodprovidedpervisit=sum(`Food Provided for`,na.rm=TRUE)/Visits)
+  summarize(Duration=max(Date)-min(Date))
 
 #re-join to original dataset
 umd.2000to2019<-left_join(umd.2000to2019,umd.2000to2019.dur)
@@ -99,6 +95,8 @@ for(i in 1:nrow(x)){
 }
 umd.2000to2019<-umd.2000to2019 %>%
   mutate(Timeassisted=g)
+
+dur.group.order<-c("1 Day","2 Days-6 Months","6-12 Months","1-2 Years","2-5 Years","5+ Years")
 
 #create datasets for different time periods
 umd.2005to2019<-umd.2000to2019 %>%
@@ -247,4 +245,4 @@ tab<-function(data,points,service,year){
   out_table
 }
 
-
+data=umd.final
