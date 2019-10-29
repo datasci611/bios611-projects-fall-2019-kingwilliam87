@@ -207,9 +207,9 @@ plot2<-function(data,points,service,year) {
     scale_fill_discrete(limit=dur.group.order)+
     geom_bar(aes_string(fill='Timeassisted')) +
     theme(axis.text.x=element_blank())+
-    labs(x= "Service Duration",y="Number of Clients",
+    labs(x="Duration as UMD Client",y="Number of Clients",
          title="Clients by Service Duration",
-         fill="Service Duration")
+         fill="Duration as UMD Client")
 }
 
 
@@ -231,15 +231,16 @@ tab<-function(data,points,service,year){
     select(id)%>%
     drop_na()%>%
     group_by('idnum'=as.integer(id)) %>%
-    summarise(`Service Count`=n())
+    summarise(tot=n())
   
   table2<-data %>%
     mutate('idnum'=as.integer(id))
   
   out_table<-left_join(table1,table2,by='idnum')%>%
-    select(`Client ID`='idnum',`Service Count`,`Service Duration`='Timeassisted')%>%
+    mutate("Days"=as.character(Duration)) %>%
+    select(`Client ID`='idnum',`Times of Selected Service in Period`=tot,"Days as UMD Client"='Days')%>%
     subset(!duplicated(`Client ID`))%>%
-    arrange(-`Service Count`)%>%
+    arrange(-`Times of Selected Service in Period`)%>%
     head(n=20)
   
   out_table

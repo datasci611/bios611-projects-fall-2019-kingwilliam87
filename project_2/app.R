@@ -10,7 +10,7 @@ library(dplyr)
 library(lubridate)
 library(rsconnect)
 
-source("helper_functions.R",local=environment())
+source("helper_functions.R",local=TRUE)
 
 
 ui <- fluidPage(
