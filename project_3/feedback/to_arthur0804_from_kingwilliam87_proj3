@@ -1,0 +1,32 @@
+1. I was not able to find the make file. Be sure to include that in the final version.
+
+2. Good use of Python to tidy the data and parse through what you would like to use, then also good use of R Tidyverse scripts to plot
+
+3. I also did not find the Docker file. Be sure to have that for the final.
+
+4. The plots are very appropriate, with histograms for comparing clients on a numeric scale (age, frequency of visit), bar 
+graphs for comparing categorical data (race, gender), and line graphs to plot change over time. You could add color to some
+of the later plots just to improve their visual appeal.
+
+5. You do a good job of breaking down your analysis into categories. The final part with chi-square analysis could be presented
+in a clearer way. Maybe write out the key info yourself instead of just showing R scripts.
+
+6. Breaking down the project into sections is very helpful, and each section is clear about the purpose. Maybe add a little
+more explanation at the beginning about what you will analyze in the project more specifically.
+
+7. The purpose should be very helpful for the client. You break down good basic information about their clients when they arrive and
+when they leave, which should be key things they will want to understand. I would definitely give more of a layman's explanation
+of the significance of the chi-square test results at the end, as most people probably aren't big chi-square buffs.
+
+8. The source of the data is pretty clear and labeled at the beginning. You could provide a little more background about who
+Urban Ministries are and how they collected their data.
+
+9. You do a good job for each plot of asking a question and then answering it afterwards based on the data in the plot. Some
+plots could better describe what exactly they are showing to be immediately clear, like the frequency plot. Also maybe say 
+more specifically what you mean by correlation for the scatterplot with age vs length of stay.
+
+10. The basic plots are all pretty clear what their purpose is and why you decided to analyze the data in that way. The only
+one that could use some more clear explanation is the chi-square plot.
+
+11. Each plot and section gives a good message in itself. Maybe add a summary at the end to point out what you find to be the
+key takeaways.
