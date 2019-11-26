@@ -1,0 +1,41 @@
+Provide feedback about the following topics:
+
+1. Is the project organized modularly, with Make as the workflow manager?
+It seems that you didn't have time to write make file and polish your project. But I believe you will do this finally! 
+
+2. Does the project use both Python (Pandas specifically) and R (Tidyverse specifically) scripts?
+Yes. I noticed that you did a lot nice data processing work with python pandas! You may refer to the link below about the memory error when merging data. Hope you can fix it finally!
+https://stackoverflow.com/questions/47386405/memoryerror-when-i-merge-two-pandas-data-frames
+
+3. Is Docker used to define execution environments appropriately?
+Same as the first item. Remember to use docker and make since they weight a lot in the grader grading rubric.
+
+4. Are the plots appropriate for the data types, the hypotheses being tested, and the points being communicated?
+Yes. You did a good job in visualizing the summary statistics. One small suggestion to make it nicer I think may be the variety of plots. If you have time and want to improve this part, using different plots may be a good idea to think. ^_^
+
+5. How can the project be organized or documented more clearly?
+Keep working on the analysis part and add some interpretations in the final report may be good points.
+
+6. Is the purpose of the project communicated clearly?
+Yes. You did it in the README file. I think it's better to keep the purpose in your final report. 
+
+7. Does the purpose of the project make sense from the client’s point of view? How could the project better serve the client?
+Yes. I think what you wrote in the README file is pretty good. You may address what you did in your report to make it clearer for UMD. It may be better to give them some suggestions according to your conclusions. 
+
+8. Is the source of the data made clear? (Remember that this project can be part of your public portfolios, so people not familiar with UMD may see it).
+Yes. You introduced UMD and some backgrounds in the README file. But do you think we should include the link of the data? Since you didn't upload the data into your "data" directory. 
+
+9. Is the interpretation of figures clearly explained?
+It seems you haven't finished the report (at least until Sunday morning). Please keep in mind to interpret your results properly.
+
+10. Is the purpose and interpretation of analysis steps clearly communicated?
+Same as the last question.
+
+11. Are overall take-home messages clearly communicated?
+Yes. Remember to finish the analysis, make file, docker file and report including interpretations on time. I am sure you will do a good job!
+
+
+Thanks!
+
+
+
