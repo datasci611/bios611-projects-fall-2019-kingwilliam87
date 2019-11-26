@@ -1,0 +1,31 @@
+1. I did not find the make file in the project. Be sure to include that for your final draft.
+
+2. You use both Python (for tidying) and R Tidyverse (for plotting) successfully.
+
+3. I also could not find the Docker file. Be sure to include that as well in your final version.
+
+4. You choose some important key variables to plot, like gender, ethnicity, duration and previous housing situation.
+I think trying to plot Gender, Duration, and Count are a bit overly ambitious with a bar graph and create a plot that is not
+the easiest to understand (same with the one for ethnicity). You could break these up into two different plots rather than put
+them all into one. That could display the same info in a clearer way.
+
+5. I would add "include = FALSE" to the R script to remove the script and clean up the final result. Then add in some commentary
+around each plot to state its purpose and your conclusions.
+
+6. You do a good job of breaking the project into multiple questions you wish to ask. I would add a little more introductory 
+commentary at the beginning to introduce your overall aims in the project, then a little more detail at each section to explain
+how you hope to answer each question, and what answers you find.
+
+7. Comparing variables like gender, ethnicity, duration and previous living situation should be good, basic things to analyze.
+I think you can make the plots a bit simpler to understand for the clients, and add in some more basic explanation alongside them.
+
+8. You mention at the beginning that you are entering in the dataset wrangled in Python, but you could add some information 
+about where the dataset came from and some background info on who UMD are.
+
+9. The plots have clear labels and colors to show which variables are being analyzed. However, I would add commentary to better
+show what questions you are asking and what answers you found.
+
+10. You give a good, basic description before each plot. I think more commentary about what you are analyzing and what the results
+tell you would be helpful as well.
+
+11. A summary at the end would help put together your main takeaways and conclusions from the project.
