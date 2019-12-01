@@ -13,8 +13,6 @@ data source: https://github.com/biodatascience/datasci611/tree/gh-pages/data/pro
 ```{r, include=FALSE}
 library(zoo)
 library(tidyverse)
-library(magrittr)
-library(tibble)
 library(ggplot2)
 library(dplyr)
 library(lubridate)
