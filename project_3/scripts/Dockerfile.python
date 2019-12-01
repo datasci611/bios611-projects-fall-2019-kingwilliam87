@@ -1,0 +1,8 @@
+
+FROM continuumio/anaconda3
+RUN pip install pandas==0.25.0 --user
+RUN pip install matplotlib --user
+RUN pip install datetime --user
+RUN pip install numpy --user
+RUN pip install os --user
+RUN pip install sklearn --user
