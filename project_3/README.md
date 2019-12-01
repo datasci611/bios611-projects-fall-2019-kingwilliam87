@@ -11,7 +11,7 @@ data source: https://github.com/biodatascience/datasci611/tree/gh-pages/data/pro
 <h1>Project 3 Overview</h1>
 
 <body>
-In this project, I will do my best to look at the data from the point of view of the people it will be most useful for: the social workers at Urban Ministries themselves. What knowledge can we glean from this data that would be most helpful for them and allow them to find ways to better help their clients?
+In this project, I will do my best to look at the data from the point of view of the people it will be most useful for: the social workers at Urban Ministries themselves. What knowledge can we glean from this data that would be most helpful for them and allow them to find ways to better help their clients? \
 </body>
 
 <body>
