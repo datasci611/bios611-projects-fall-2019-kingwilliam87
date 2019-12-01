@@ -1,0 +1,13 @@
+FROM rocker/verse:latest
+RUN Rscript -e "install.packages('tidyverse')"
+RUN Rscript -e "install.packages('zoo')"
+RUN Rscript -e "install.packages('ggplot2')"
+RUN Rscript -e "install.packages('dplyr')"
+RUN Rscript -e "install.packages('lubridate')"
+
+FROM continuumio/anaconda3
+RUN conda install -c conda-forge statsmodels
+RUN pip install pandas==0.25.0 --user
+RUN pip install matplotlib --user
+RUN pip install datetime --user
+RUN pip install numpy --user
