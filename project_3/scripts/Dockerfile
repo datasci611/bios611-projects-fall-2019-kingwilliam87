@@ -1,4 +1,4 @@
-FROM rocker/verse:3.5.1
+FROM rocker/verse:latest
 RUN conda install -c conda-forge statsmodels
 RUN Rscript -e "install.packages('tidyverse')"
 RUN Rscript -e "install.packages('zoo')"
