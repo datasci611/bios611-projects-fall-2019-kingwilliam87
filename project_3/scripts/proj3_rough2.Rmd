@@ -1,0 +1,172 @@
+---
+title: "proj3_final"
+output: html_document
+---
+
+
+```{r, include=FALSE}
+library(zoo)
+library(tidyverse)
+library(magrittr)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+umd<-read_csv('data/proj3_umd.csv')
+ee<-read_csv('data/proj3_ee.csv')
+dis<-read_csv('data/proj3_dis.csv')
+```
+
+## What are some of the demographics of UMD clients?
+
+```{r echo=FALSE}
+ggplot(umd, aes(x=Gender))+
+  geom_bar(aes(fill=Race))+
+  labs(y='Number of Clients',title='Clients by Gender and Race')
+```
+
+Around 80% of clients are male.
+The largest racial group is Black/African American, followed next by White.
+
+```{r echo=FALSE}
+ggplot(umd, aes(x=Entry_Age))+
+  geom_histogram(aes(fill=Gender),binwidth=1)+
+  labs(x='Age',y='Number of Clients',title='Clients by Age and Gender')
+```
+
+Most clients are between 40-60 years old at entry, with early 50s the highest represented.
+A significant but smaller number are between the ages of 20-40.
+
+## What do we know about clients' situational information prior to entry at UMD?
+
+```{r echo=FALSE}
+umd_living_head=umd %>%
+  filter(Prior_Living == 'Place not meant for habitation' | Prior_Living == 'Emergency shelter' | Prior_Living == 'Family Home' | Prior_Living == 'Substance treatment center' | Prior_Living == 'Friend Home' | Prior_Living == 'Hotel or motel' | Prior_Living == 'Incarcerated' | Prior_Living == 'Rental w/o subsidy' | Prior_Living == 'Medical facility' | Prior_Living == 'Transitional housing')
+  
+ggplot(umd_living_head, aes(x=Prior_Living))+
+  geom_bar(aes(fill=Prior_Living))+
+  labs(x='Prior Living Situation',y='Number of Clients',fill='Prior Living Situation',title='Ten Most Common Prior Living Situations for Clients')+
+  theme(axis.title.x=element_blank(),axis.text.x= element_blank())
+```
+
+By far the most common previous living situation for clients is 'Place not meant for habitation,' followed significantly behind by 'Emergency shelter,' 'Family Home' and 'Friend Home.' One thing that this implies is most people come to UMD after already being homeless for a period of time, so it is not the first place most people turn to after becoming homeless.
+
+Let's take a closer look at prior living situation for clients by adding in data about how many times these clients have been homeless in the past three years
+```{r echo=FALSE}
+ggplot(umd_living_head, aes(x=Prior_Living)) +
+  geom_bar(aes(fill=Recent_Times_Homeless))+
+  coord_flip()+
+  labs(y='Number of Clients',x='Prior Living Situation',fill='Times Homeless, Past 3 Years')
+
+```
+
+Something interesting we see is that the highest and lowest categories are the two most common; most clients are either homeless for the first time, or they have been homeless at least four times before. Somewhat smaller numbers of clients are in between those two extremes.
+
+# How long were clients living at their previous location?
+
+```{r echo=FALSE}
+time.order<-c("1 Day or Less","2-6 Days","1 Week or Less","7-29 Days","30-89 Days","90-365 Days","1+ Years","Client doesn't know","Client refused (HUD)","Data not collected",NA)
+
+ggplot(umd, aes(x=Prior_Living_Time)) +
+  geom_bar(aes(fill=Prior_Living_Time))+
+  scale_x_discrete(limit=time.order)+
+  scale_fill_discrete(limit=time.order)+
+  labs(y='Number of Clients',x='Time at Prior Living Situation',fill='Time at Prior LIving Situation',title='Time Spent at Prior Living Situation')+
+  theme(axis.title.x=element_blank(),axis.text.x= element_blank())
+
+```
+
+There is a relatively even spread between '7-29 Days,' '30-89 Days,' '90-365 Days' and '1+ Years.' A somewhat smaller number of clients were living at their previous location for 2-6 days. Considering these are significantly different time periods, this shows that clients come from a pretty mixed previous situation. The fewest clients are coming from a location they were living at for only 1 day or less.
+
+We can again have a closer look by comparing this data with previous living situation for clients. 
+
+```{r echo=FALSE}
+time.order<-c("1 Day or Less","2-6 Days","1 Week or Less","7-29 Days","30-89 Days","90-365 Days","1+ Years","Client doesn't know","Client refused (HUD)","Data not collected",NA)
+
+ggplot(umd_living_head, aes(x=Prior_Living)) +
+  geom_bar(aes(fill=Prior_Living_Time))+
+  scale_fill_discrete(limit=time.order)+
+  coord_flip()+
+  labs(y='Number of Clients',x='Prior Living Situation',fill='Time at Prior Living Situation')
+```
+
+This again shows a mostly mixed situation for clients; there are no immediately obvious patterns about correlation between prior living situation and time spent there.
+
+```{r echo=FALSE}
+ggplot(umd_living_head, aes(x=Prior_Living)) +
+  geom_bar(aes(fill=Recent_Months_Homeless))+
+  coord_flip()+
+  labs(y='Number of Clients',x='Prior Living Situation',fill='Months Homeless, Past 3 Years')
+```
+
+Here we again see a similar pattern to our previous graph comparing number of times clients have been homeless with their previous living situation: The two most common groups are those who have been homeless for less than one month in the past three years, and those who have been homeless for more than twelve months.
+
+```{r echo=FALSE}
+ggplot(data=ee, aes(x=Duration)) +
+  geom_histogram(binwidth=5,fill='blue')+
+  labs(y='Number of Clients',x='Days at UMD',title='Number of Clients by Days at UMD, in Groups of 5 Days')
+```
+
+Here, we can see the majority of clients stay between 1 and 15 days, with a very select few staying over one year.
+
+# When are clients entering the system?
+
+Group client entry dates by month and add a trend line to see if there are any noticeable patterns.
+
+```{r echo=FALSE}
+entry.count<-ee %>%
+  mutate(Entry_Month=as.yearmon(Entry_Date))%>%
+  drop_na()%>%
+  group_by(Entry_Month)%>%
+  summarize(count=n())
+
+ggplot(entry.count,aes(x=as.Date(Entry_Month,format='%Y-%m'),y=count))+
+  geom_point(color='red4')+
+  geom_smooth()+
+  labs(x='Entry Month',y='Number of Clients',title='Client Count by Entry Month')+
+  theme(axis.text.x =element_text(size  = 10,angle = 45,
+                                hjust = 1,vjust = 1))
+```
+
+Here  see the number of clients entering the system have declined over time.
+
+# Why are clients leaving the program?
+
+```{r echo=FALSE}
+ggplot(data=ee, aes(x=Exit_Date, y=Duration,color=`Reason for Leaving`)) +
+  geom_point()+
+  labs(x='Exit Date',title='Client Exit Date vs Duration of Stay')
+```
+
+Here, we a few possible trends between Exit Date and Duration of clients' stay. Duration is mostly short-term, and those who stay for a longer time tend to be more likely to complete the program. There do not appear to be any obvious trends in duration either seasonally or over time.
+
+In terms of reason for leaving, the largest number of clients leave for reasons listed as Other and Unknown/Disappeared. Recently, clients appear to be leaving for a wider variety of reasons. Completed program, left for housing opp. before completeting program and Unknown/Disappeared all appear to increase in frequency.
+
+It is worthwhile to look specifically at Reason for Leaving.
+
+```{r echo=FALSE}
+ggplot(ee,aes(x=`Reason for Leaving`))+
+         geom_bar(aes(fill=`Reason for Leaving`))+
+  labs(y='Number of Clients',title='Number of Clients by Reason for Leaving')+
+  theme(axis.title.x=element_blank(),axis.text.x= element_blank())
+```
+
+Here we also clearly see that Other and Unknown/Disappeared are the most common reasons. Significantly far behind are Non-compliance with program, Left for housing opp. before completing the program and Completed program.
+
+# Where are clients going after leaving?
+
+```{r echo=FALSE}
+
+dest.head=ee%>%
+  filter(Destination=='With friends temporarily' | Destination == 'No exit interview' | Destination == 'With family temporarily' | Destination == 'Data not collected' | Destination == 'Place not meant for habitation' | Destination == 'Client rental without subsidy' | Destination == 'Medical Facility' | Destination == 'With friends permanently' | Destination == 'Client rental with other subsidy' | Destination == 'With friends permanently')
+
+ggplot(data=dest.head, aes(x=Destination)) +
+  geom_bar(aes(fill=Destination))+
+  labs(title='Ten Most Common Destinations After Program',y='Number of Clients')
+```
+
+```{r echo=FALSE}
+ggplot(data=dest.head, aes(x=Exit_Date, y=Duration,color=Destination))+
+  geom_point()+
+  labs(x='Exit Date',title='Client Exit Date vs Duration of Stay')
+```
