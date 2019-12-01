@@ -4,6 +4,8 @@
 The data used for this project was provided by Urban Ministries, a charity organization that has worked to help those in need in our community for decades.  
 
 The data they provided was collected over multiple decades and is stored over multiple files. It includes numerical and categorical data about their clients and the different types of assistance they received at different times.
+
+data source: https://github.com/biodatascience/datasci611/tree/gh-pages/data/project2_2019
 </body>
 
 <h1>Project 3 Overview</h1>
@@ -11,11 +13,7 @@ The data they provided was collected over multiple decades and is stored over mu
 <body>
 In this project, I will do my best to look at the data from the point of view of the people it will be most useful for: the social workers at Urban Ministries themselves. What knowledge can we glean from this data that would be most helpful for them and allow them to find ways to better help their clients?
 
-In our first and only meeting with Urban Ministries, they mentioned one area where they are curious in learning more: which clients are they able to help make a permanent transition to self-sufficiency, and which clients continue to need help? They said they hoped to learn more about which methods were most useful and which ones were less useful.
-
-Keeping this in mind, I will base my analysis on comparisons between clients, and specifically between clients who receive help from different durations of time. My hope is to recognize some patterns and differences between these different types of clients - perhaps see if there are any clear signs that certain types of assistance are more successful than others. In the end, my goal is to uncover information that could be useful for Urban Ministries to plan their future aid-giving.
-
-I would like to see what statistical analysis can be performed to help provide easy to understand conclusions about possible trends and similarities between clients and services.
+Given that the datafiles for this project contain much more qualitative information than our previous datafile, will look to compare different subgroups of clients based on these qualitative variables. I would like to generally understand the clients of UMD better: what is some basic information about them, what situations are they coming from, and where are they going after they leave? I also look at trends over time to see if any patterns can be recognized from the data.
 </body>
 
 <h1>Analysis Methods</h1>
