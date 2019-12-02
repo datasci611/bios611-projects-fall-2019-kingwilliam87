@@ -21,5 +21,7 @@ For this project I will be relying on R, specifically packages including tidyver
 </body>
 
 <h1>Make Command</h1>
-Makefile located in project_3/scripts
+
+<body>
 make project_3
+</body>
