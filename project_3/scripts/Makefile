@@ -2,5 +2,5 @@
 project_3: 
 	docker build -t project_3 .
 	python proj3final.ipynb
-	Rscript -e proj3_Rscript.R
+	Rscript proj3_Rscript.R
 	Rscript -e "library(rmarkdown); rmarkdown::render('proj3_final.Rmd', 'html_document')"  && mv proj3_final.html ../results
