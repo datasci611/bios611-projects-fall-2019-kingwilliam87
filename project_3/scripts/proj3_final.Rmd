@@ -16,9 +16,9 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(lubridate)
-umd<-read_csv('data/proj3_umd.csv')
-ee<-read_csv('data/proj3_ee.csv')
-dis<-read_csv('data/proj3_dis.csv')
+umd<-read_csv('../data/proj3_umd.csv')
+ee<-read_csv('../data/proj3_ee.csv')
+dis<-read_csv('../data/proj3_dis.csv')
 ```
 
 ## What are some of the demographics of UMD clients?
